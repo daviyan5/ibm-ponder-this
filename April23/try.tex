@@ -1,0 +1,37 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
+\begin{document} 
+\begin{algorithm}
+	\caption{Solver for the April/23 Problem} 
+	\begin{algorithmic}
+        \Require Matrix A of operations after Gauss-Jordan MOD2 reduction
+        \Ensure A is solvable
+        \State ActualCondition $\leftarrow$ InitialCondition
+        \State IsZero $\leftarrow$ Count(ActualCondition, $0$)
+        \State Solution $\leftarrow$ $\emptyset$
+		\While {IsZero $\neq \emptyset$ $\land$ $(\lnot$ Found$)$}
+            \State IsZero $\leftarrow$ Shuffle(IsZero) \Comment{Force non-determinism}
+            \For{$i \in IsZero$ $\land$ $(\lnot$ Found$)$} 
+                \If{$i \in A.steps$ $\land$ $(\lnot$ Found$)$}
+                    \State ActualCondition $\leftarrow$ ApplyOperation(i, ActualCondition)
+                    \State Solution $\leftarrow$ Solution $\cup$ $i$
+                    \State Found $\leftarrow$ True
+                \EndIf
+            \EndFor
+            \State IsZero $\leftarrow$ Count(ActualCondition, $0$)
+        \EndWhile
+        \If{ActualCondition $\eq$ FinalCondition}
+            \Return Solution
+        \Else
+            \For{$i \in IsZero$}
+                \State NextCondition $\leftarrow$ ApplyOperation(i, ActualCondition)
+                \State NextSolution $\leftarrow$ Solver(NextCondition, A)
+                \If{NextSolution $\neq$ $\emptyset$}
+                    \State Solution $\leftarrow$ Solution $\cup$ $i$
+                    \State Solution $\leftarrow$ Solution $\cup$ NextSolution
+                    \Return Solution
+        \EndIf
+	\end{algorithmic} 
+\end{algorithm}
+\end{document}
